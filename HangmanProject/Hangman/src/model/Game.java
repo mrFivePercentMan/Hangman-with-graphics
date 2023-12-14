@@ -83,4 +83,20 @@ public class Game {
         }
         return false;
     }
+
+    public String getCurrentWordState() {
+        StringBuilder displayedWord = new StringBuilder();
+        for (char letter : word.getWord().toCharArray()) {
+            if (word.getGuessedLetters().contains(letter)) {
+                displayedWord.append(letter);
+            } else {
+                displayedWord.append('-');
+            }
+        }
+        return displayedWord.toString();
+    }
+
+    public String getHangmanState() {
+        return hangman.getHangman();
+    }
 }

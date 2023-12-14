@@ -13,5 +13,4 @@ public class Main {
         // new Frame();
         view.run();
     }
-
 }

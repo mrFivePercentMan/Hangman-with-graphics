@@ -29,14 +29,14 @@ public class Hangman {
     }
 
     public void printHangman() {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < hangman.length; i++) {
-            System.out.println();
             for (int j = 0; j < hangman[0].length; j++) {
-                System.out.print(hangman[i][j]);
+                sb.append(hangman[i][j]);
             }
+            sb.append("\n");
         }
-        System.out.println();
-        System.out.println();
+
     }
 
     private void baseCreator() {
@@ -64,6 +64,17 @@ public class Hangman {
             hangman[i][8] = "|";
         }
 
+    }
+
+    public String getHangman() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hangman.length; i++) {
+            for (int j = 0; j < hangman[0].length; j++) {
+                sb.append(hangman[i][j]);
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
 }

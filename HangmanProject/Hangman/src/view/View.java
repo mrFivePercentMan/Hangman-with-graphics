@@ -1,15 +1,10 @@
 package view;
 
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-
 import javax.swing.JOptionPane;
-
 import controller.Controller;
 import integration.LetterAlreadyEnteredException;
 
 public class View {
-
     private Controller contr;
 
     public View(Controller contr) {
@@ -19,42 +14,48 @@ public class View {
     public void run() {
         try {
             contr.startNewGame();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error starting the game: " + e.getMessage());
+            return;
         }
-        JOptionPane.showMessageDialog(null,
-                "A new game has started and a new word has been generated");
 
-        while (!contr.gameLost()) {
-            String strGuess = JOptionPane.showInputDialog(null, "Enter the letter");
-
-            while (strGuess.length() != 1 || Character.isDigit(strGuess.charAt(0))) {
-                strGuess = JOptionPane.showInputDialog(null, "Error try again");
+        while (!contr.gameLost() && !contr.gameWon()) {
+            String gameStatus = buildGameStatus();
+            String strGuess = JOptionPane.showInputDialog(null, gameStatus);
+            if (strGuess == null) {
+                System.exit(0);
             }
 
-            char guess = strGuess.charAt(0);
+            if (strGuess == null || strGuess.isEmpty() || strGuess.length() != 1
+                    || Character.isDigit(strGuess.charAt(0))) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a letter.");
+                continue;
+            }
+
             try {
-                // JOptionPane.showMessageDialog(null,
-                // Arrays.toString(contr.enterGuess(guess)));
-                System.out.println(Arrays.toString(contr.enterGuess(guess)));
-                System.out.println();
+                contr.enterGuess(strGuess.charAt(0));
             } catch (LetterAlreadyEnteredException e) {
-                System.out.println();
-                System.out.println("The letter is already entered");
+                JOptionPane.showMessageDialog(null, "The letter '" + strGuess + "' is already entered.");
             }
-
-            if (contr.gameLost()) {
-                System.out.println("You lost bitch!");
-                System.out.println("The word was " + contr.getWord());
-            }
-
-            if (contr.gameWon()) {
-                System.out.println("You won");
-                break;
-            }
-
-            System.out.println("Your wrong guesses: " + contr.getGuesses());
-
         }
+
+        String finalMessage = contr.gameWon() ? "You won!\nThe word was: " + contr.getWord()
+                : "You lost!\nThe word was: " + contr.getWord();
+        JOptionPane.showMessageDialog(null, finalMessage);
+    }
+
+    private String buildGameStatus() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(contr.getHangmanState());
+        sb.append("\nThe word: ");
+        sb.append(getDisplayWord());
+        sb.append("\nWrong Guesses: ");
+        sb.append(contr.getGuesses().toString());
+        return sb.toString();
+    }
+
+    private String getDisplayWord() {
+
+        return contr.getCurrentWordState();
     }
 }

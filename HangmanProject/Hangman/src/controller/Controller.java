@@ -46,4 +46,11 @@ public class Controller {
         return game.getWord();
     }
 
+    public String getCurrentWordState() {
+        return game.getCurrentWordState();
+    }
+
+    public String getHangmanState() {
+        return game.getHangmanState();
+    }
 }
